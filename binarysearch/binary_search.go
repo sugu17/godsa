@@ -1,9 +1,5 @@
 package main
 
-import (
-	"fmt"
-)
-
 func BinarySearch(list []int, target int) (int, bool) {
 	var low int = 0
 	var high int = len(list) - 1
@@ -22,12 +18,4 @@ func BinarySearch(list []int, target int) (int, bool) {
 }
 
 func main() {
-	var test []int = []int{1, 3, 5, 7, 9}
-	target := 80
-	index, ok := BinarySearch(test, target)
-	if ok {
-		fmt.Printf("Value %v found at index %v\n", target, index)
-	} else {
-		fmt.Printf("Value %v could not be found in the array\n", target)
-	}
 }
