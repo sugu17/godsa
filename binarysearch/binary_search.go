@@ -1,4 +1,4 @@
-package main
+package binarysearch
 
 func BinarySearch(list []int, target int) (int, bool) {
 	var low int = 0
@@ -15,7 +15,4 @@ func BinarySearch(list []int, target int) (int, bool) {
 		}
 	}
 	return -1, false
-}
-
-func main() {
 }
