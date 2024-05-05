@@ -1,0 +1,9 @@
+#!/bin/bash
+
+files=$(find . -type f -name "*.go")
+
+for file in $files
+do 
+	go fmt $file
+	go vet $file
+done
