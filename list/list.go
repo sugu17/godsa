@@ -2,11 +2,20 @@ package list
 
 import (
 	"fmt"
+	"log"
 )
 
+func init() {
+	log.SetFlags(log.Lshortfile)
+}
+
 type singlyLinkedNode[T any] struct {
-	next *singlyLinkedNode[T]
-	data T
+	next  *singlyLinkedNode[T]
+	Value T
+}
+
+func (sln *singlyLinkedNode[T]) Next() *singlyLinkedNode[T] {
+	return sln.next
 }
 
 type SinglyLinkedList[T any] struct {
@@ -19,23 +28,33 @@ func (sll *SinglyLinkedList[T]) Front() *singlyLinkedNode[T] {
 
 func (sll *SinglyLinkedList[T]) Back() *singlyLinkedNode[T] {
 	node := sll.Front()
-	if node == nil {
-		return nil
-	}
-	for {
-		if node.next == nil {
-			break
-		}
-		node = node.next
+	for ; node != nil && node.Next() != nil; node = node.Next() {
 	}
 	return node
 }
 
-func (sll *SinglyLinkedList[T]) PushBack(data T) *singlyLinkedNode[T] {
+func (sll *SinglyLinkedList[T]) PushFront(value T) *singlyLinkedNode[T] {
+	head := sll.Front()
+	if head == nil {
+		sll.head = &singlyLinkedNode[T]{
+			next:  nil,
+			Value: value,
+		}
+		return sll.head
+	}
+	prev := head
+	sll.head = &singlyLinkedNode[T]{
+		next:  prev,
+		Value: value,
+	}
+	return sll.head
+}
+
+func (sll *SinglyLinkedList[T]) PushBack(value T) *singlyLinkedNode[T] {
 	lastNode := sll.Back()
 	newNode := &singlyLinkedNode[T]{
-		next: nil,
-		data: data,
+		next:  nil,
+		Value: value,
 	}
 	if lastNode == nil {
 		sll.head = newNode
@@ -45,22 +64,46 @@ func (sll *SinglyLinkedList[T]) PushBack(data T) *singlyLinkedNode[T] {
 	return newNode
 }
 
-func (sll SinglyLinkedList[T]) String() string {
-	node := sll.Front()
-	if node == nil {
-		return "[]"
+func (sll *SinglyLinkedList[T]) Remove(index int) (T, bool) {
+	if index == 0 {
+		prevVal := sll.head.Value
+		sll.head = sll.head.next
+		return prevVal, true
 	}
-	if node.next == nil {
-		return fmt.Sprintf("[%v]", node.data)
-	}
-	output := "["
-	for {
-		if node.next == nil {
-			output += fmt.Sprintf("%v", node.data)
-			break
+	var defValue T
+	curr := 0
+	for node := sll.Front(); node.next != nil; node = node.next {
+		if index == curr+1 {
+			prevVal := node.next.Value
+			nodeAfterTarget := node.next.next
+			node.next = nodeAfterTarget
+			return prevVal, true
 		}
-		output += fmt.Sprintf("%v, ", node.data)
-		node = node.next
+		curr++
+	}
+	return defValue, false
+
+}
+
+func (sll *SinglyLinkedList[T]) IndexOf(target T, test func(val T, target T) bool) (int, bool) {
+	index := 0
+	for node := sll.Front(); node != nil; node = node.Next() {
+		if test(node.Value, target) {
+			return index, true
+		}
+		index++
+	}
+	return -1, false
+}
+
+func (sll SinglyLinkedList[T]) String() string {
+	output := "["
+	for node := sll.Front(); node != nil; node = node.Next() {
+		verb := "%v, "
+		if node.Next() == nil {
+			verb = "%v"
+		}
+		output += fmt.Sprintf(verb, node.Value)
 	}
 	output += "]"
 	return output
