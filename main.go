@@ -6,10 +6,9 @@ import (
 )
 
 func main() {
-	list := list.NewSinglyLinkedList[int]()
-	list.PushBack(3)
-	list.PushBack(6)
-	list.PushBack(10)
-	list.PushFront(19)
-	list.Remove(3)
+	list := list.NewDoublyLinkedList[int]()
+	list.PushFront(10)
+	list.PushFront(89)
+	list.PushFront(95)
+	fmt.Println(list)
 }
