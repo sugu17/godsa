@@ -18,6 +18,10 @@ func (sln *singlyLinkedNode[T]) Next() *singlyLinkedNode[T] {
 	return sln.next
 }
 
+func (sln *singlyLinkedNode[T]) Prev() *singlyLinkedNode[T] {
+	return nil
+}
+
 type SinglyLinkedList[T any] struct {
 	head *singlyLinkedNode[T]
 }
@@ -64,6 +68,17 @@ func (sll *SinglyLinkedList[T]) PushBack(value T) *singlyLinkedNode[T] {
 	return newNode
 }
 
+func (sll *SinglyLinkedList[T]) IndexOf(test func(val T) bool) (int, bool) {
+	index := 0
+	for node := sll.Front(); node != nil; node = node.Next() {
+		if test(node.Value) {
+			return index, true
+		}
+		index++
+	}
+	return -1, false
+}
+
 func (sll *SinglyLinkedList[T]) Remove(index int) (T, bool) {
 	if index == 0 {
 		prevVal := sll.head.Value
@@ -83,17 +98,6 @@ func (sll *SinglyLinkedList[T]) Remove(index int) (T, bool) {
 	}
 	return defValue, false
 
-}
-
-func (sll *SinglyLinkedList[T]) IndexOf(target T, test func(val T, target T) bool) (int, bool) {
-	index := 0
-	for node := sll.Front(); node != nil; node = node.Next() {
-		if test(node.Value, target) {
-			return index, true
-		}
-		index++
-	}
-	return -1, false
 }
 
 func (sll SinglyLinkedList[T]) String() string {
