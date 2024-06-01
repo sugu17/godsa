@@ -44,7 +44,6 @@ func Max(numbers []int) int {
 }
 
 func BinarySearch(numbers []int, target int, low int, high int) int {
-	log.Println(low, high)
 	if (high - low) == 1 {
 		if numbers[low] == target {
 			return low
